@@ -13,6 +13,11 @@ An algorithmic solution to a multiplayer strategy game, created during my studie
      2.
  3)  Turns the board into a heatmap, used to calculate the shortest distance
      to the opponents pieces.
+	 Heatmap example:
+     3 -1  3  3  3
+     3  2  2  2  2
+     3  2  1  1  1
+     3  2  1 -2  1
  4)  Allocates space for the random given piece.
  5)  Fills the piece with the given structure as zeroes and -1 / -2.
  6)  Frees the line being read, as it is no longer needed until the next round.
