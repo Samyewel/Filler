@@ -1,1 +1,0 @@
-../resources/filler_vm -p1 ../resources/players/carli.filler -p2 ../okoponen.filler -f ../resources/maps/map00

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: swilliam <swilliam@student.42.fr>          +#+  +:+       +#+         #
+#    By: sam <sam@student.42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/05 13:26:33 by swilliam          #+#    #+#              #
-#    Updated: 2022/09/22 14:39:27 by swilliam         ###   ########.fr        #
+#    Updated: 2022/10/03 16:04:33 by sam              ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,7 @@ OBJ = $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
 NAME = libft.a
 CC = gcc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 INCLUDES = -I includes
 
 all: 		$(NAME)
@@ -68,4 +68,4 @@ fclean: 	clean
 
 re:			fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all debug clean fclean re

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sam <sam@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: swilliam <swilliam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/05 14:50:00 by swilliam          #+#    #+#             */
-/*   Updated: 2022/09/13 12:35:15 by sam              ###   ########.fr       */
+/*   Updated: 2022/10/04 12:41:45 by swilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,7 +151,7 @@ void		length_modifier_x(t_printf *flags);
 void		print_char(t_printf *flags, char c);
 void		print_decimal(t_printf *flags, uintmax_t u);
 void		print_float_f(t_printf *flags, long double f);
-void		print_hexadecimal(t_printf *flags, unsigned long long  x);
+void		print_hexadecimal(t_printf *flags, unsigned long long x);
 void		print_integer(t_printf *flags, intmax_t d);
 void		print_octal(t_printf *flags, uintmax_t o);
 void		print_string(t_printf *flags, char *str);
@@ -161,7 +161,8 @@ void		print_string(t_printf *flags, char *str);
 */
 char		*ft_printf_dtostr(double n, intmax_t power);
 char		*ft_printf_signed_itoa(long long n);
-char		*ft_printf_utoa_base(t_printf *flags, unsigned long long input, int base);
+char		*ft_printf_utoa_base(t_printf *flags, unsigned long long input,
+				int base);
 int			ft_printf_unsigned_number_length(unsigned long long n, int base);
 long double	float_f_rounding(t_printf *flags, long double f);
 char		*float_f_dtostr(t_printf *flags, long double f);

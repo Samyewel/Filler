@@ -6,12 +6,12 @@
 #    By: swilliam <swilliam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/05 13:26:33 by swilliam          #+#    #+#              #
-#    Updated: 2022/09/30 14:17:12 by swilliam         ###   ########.fr        #
+#    Updated: 2022/10/04 15:54:33 by swilliam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # Source files
-FILLER_FILES = main.c read_input.c heatmap.c piece_placement.c
+FILLER_FILES = main.c read_input.c heatmap.c piece_placement.c initialise.c
 
 # Directories
 LIBFT_DIR = ./libft/
@@ -27,7 +27,7 @@ OBJ = $(LIBFT_OBJ) $(FTP_OBJ)
 # Compilation
 NAME = libft.a
 CC = gcc
-FLAGS = -g -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror
 INCLUDES = -I./includes -I$(LIBFT_DIR)includes -I./eval_tests
 ADD_LIB = -L. $(NAME)
 EXECUTABLE = swilliam.filler
@@ -58,7 +58,7 @@ fclean: 	clean
 			@printf "\rCleaning library and executable..."
 			@make fclean -sC $(LIBFT_DIR)
 			@rm -f $(EXECUTABLE)
-			@rm -f filler.trace log
+			@rm -f filler.trace
 			@printf "\r                                       \r"
 			@printf "\rLibrary and executable removed.\n"
 
@@ -66,8 +66,8 @@ test:		all
 			gcc $(INCLUDES) $(OBJ) $(LIBFT_DIR)$(NAME) -o $(EXECUTABLE)
 
 vm:			test
-			./resources/filler_vm -p1 ./swilliam.filler -p2 ./resources/players/carli.filler -f ./resources/maps/map00
+			./resources/filler_vm -p1 ./swilliam.filler -p2 ./resources/players/carli.filler -f ./resources/maps/map01
 
 re:			fclean all
 
-.PHONY: all clean fclean re test libft
+.PHONY: all clean fclean re test vm libft

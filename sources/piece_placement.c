@@ -6,83 +6,128 @@
 /*   By: swilliam <swilliam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 14:30:39 by sam               #+#    #+#             */
-/*   Updated: 2022/09/30 16:22:41 by swilliam         ###   ########.fr       */
+/*   Updated: 2022/10/04 14:30:18 by swilliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Filler.h"
 
+/*
+** place_piece:
+** - Sends the coordinates of where the place is to be placed. If the piece
+**   cannot be placed, the default coordinate values of 9999 will be used,
+**   therefore ending the game.
+*/
+
 void	place_piece(t_piece *piece)
 {
 	if (piece->created)
 	{
-		//ft_printf("%d %d\n", piece->best_y, piece->best_x);
-		ft_putnbr(piece->best_y);
-		ft_putchar(' ');
-		ft_putnbr(piece->best_x);
-		ft_putchar('\n');
+		ft_printf("%d %d\n", piece->best_y, piece->best_x);
+		piece->placed = 1;
 	}
 }
 
-void	attempt_placement(t_filler *data, t_piece *piece, int x, int y)
+/*
+** update_piece_distance:
+** - Updates the information of the current best possible distance and
+**   coordinates for the piece to be placed.
+*/
+
+static void	update_placement(t_piece *piece, t_attempt *attempt, int x, int y)
 {
-	int	validate_x;
-	int	validate_y;
-	int	distance;
-	int	overlap;
-
-	validate_y = 0;
-	distance = 0;
-	overlap = 0;
-	while (validate_y < piece->y)
-	{
-		validate_x = 0;
-		while (validate_x < piece->x)
-		{
-			if (x + validate_x < data->board_x && y + validate_y < data->board_y)
-			{
-				if (piece->piece[validate_y][validate_x] < 0)
-				{
-					overlap += (data->board[y + validate_y][x + validate_x] == data->player);
-					if (overlap > 1)
-						return ;
-					if (data->board[y + validate_y][x + validate_x] == data->opponent)
-						return ;
-					if (data->board[y + validate_y][x + validate_x] >= 0)
-						distance += data->board[y + validate_y][x + validate_x];
-				}
-				validate_x++;
-			}
-			else
-				return ;
-		}
-		validate_y++;
-	}
-	if (overlap == 1 && distance < piece->best_distance)
-	{
-		piece->best_distance = distance;
-		piece->best_x = x;
-		piece->best_y = y;
-	}
+	piece->best_distance = attempt->distance;
+	piece->best_x = x;
+	piece->best_y = y;
 }
 
-void	calculate_placement(t_filler *data, t_piece *piece)
+/*
+** check_coordinates:
+** - Checks that the current section of the piece does not overlap another
+**   of your pieces more than once.
+** - If the current section of the piece overlaps with an opponents piece,
+**   it is not a valid placement.
+** - Adds the current heatmap value to the distance with the aim of finding
+**   the lowest possible distance later in calculate_placement.
+*/
+
+static int	check_coordinates(t_board *board, t_attempt *attempt, int x, int y)
+{
+	if (x < board->x && y < board->y)
+	{
+		attempt->overlap += (board->board[y][x] == board->player);
+		if (attempt->overlap > 1)
+			return (0);
+		if (board->board[y][x] == board->opponent)
+			return (0);
+		if (board->board[y][x] >= 0)
+			attempt->distance += board->board[y][x];
+		return (1);
+	}
+	return (0);
+}
+
+/*
+** calculate_placement:
+** - Loops through the piece given, checking each coordinate to see if
+**   placement is possible.
+** - Updates the placement coordinates and distance when a lower distance
+**   is calculated.
+*/
+
+static void	calculate_placement(t_board *board, t_piece *piece, int x, int y)
+{
+	t_attempt	*attempt;
+	int			x2;
+	int			y2;
+
+	attempt = (t_attempt *)malloc(sizeof(t_attempt));
+	if (!attempt)
+		end_game(board, piece);
+	y2 = 0;
+	initialise_attempt(attempt);
+	while (y2 < piece->y)
+	{
+		x2 = 0;
+		while (x2 < piece->x)
+		{
+			if (piece->piece[y2][x2] < 0)
+				if (!check_coordinates(board, attempt, x2 + x, y2 + y))
+					return ;
+			x2++;
+		}
+		y2++;
+	}
+	if (attempt->overlap == 1 && attempt->distance < piece->best_distance)
+		update_placement(piece, attempt, x, y);
+	free(attempt);
+}
+
+/*
+** attempt_placement:
+** - Loops through the board, checking each coordinate to see if piece
+**   placement is possible.
+** - Calls place_piece once all possible coordinates are attempted.
+*/
+
+void	attempt_placement(t_board *board, t_piece *piece)
 {
 	int	x;
 	int	y;
 
+	y = 0;
 	if (piece->created)
 	{
-		y = 0;
-		while (y < data->board_y)
+		while (y < board->y)
 		{
 			x = 0;
-			while (x < data->board_x)
+			while (x < board->x)
 			{
-				attempt_placement(data, piece, x, y);
+				calculate_placement(board, piece, x, y);
 				x++;
 			}
 			y++;
 		}
+		place_piece(piece);
 	}
 }
